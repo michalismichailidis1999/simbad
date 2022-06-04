@@ -1,7 +1,6 @@
 package com.company;
 
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 public class Obstacle {
     private Vector3d pos;

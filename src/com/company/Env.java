@@ -8,19 +8,22 @@ import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 
 public class Env extends EnvironmentDescription{
-    private final Vector3f boxSize = new Vector3f(0.5f, 0.5f, 0.5f);
-    private final Vector3f wallSize = new Vector3f(7f, 1.25f, 0.5f);
+    private final Vector3f boxSize = new Vector3f(0.5f, 1f, 0.5f);
+    private final Vector3f wallSize = new Vector3f(7f, 2.5f, 0.5f);
     private final Color3f obstacleColor = new Color3f(0f, 1f, 1f);
 
     public Env(ArrayList<PathLine> linePaths, ArrayList<Obstacle> obstacles){
-        light1SetPosition(0, 4, 0);
+        light1SetPosition(-2, 2, 0.5);
+        light2SetPosition(0, -10, 0);
         light1IsOn = true;
         light2IsOn = false;
+        light2Color = black;
 
         boxColor = obstacleColor;
 
         setWorldSize(20);
         showAxis(true);
+        ambientLightColor = white;
 
         this.initializeObstacles(obstacles);
         this.initializeLinePaths(linePaths);

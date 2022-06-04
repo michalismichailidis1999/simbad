@@ -24,9 +24,9 @@ public class MyRobot extends Agent{
     private final RangeSensorBelt bumpers;
     private final RangeSensorBelt sonars;
     private final LineSensor line;
-//    private final LightSensor leftLight;
-//    private final LightSensor rightLight;
-    private final LightSensor light;
+    private final LightSensor leftLight;
+    private final LightSensor rightLight;
+//    private final LightSensor light;
 
     // Camera
     CameraSensor camera;
@@ -40,6 +40,7 @@ public class MyRobot extends Agent{
     private double hitTime = 0;
     private boolean obstacleAvoided = false;
     private double firstDetectionTime = 0;
+    private boolean reachedTarget = false;
 
     public MyRobot (Vector3d position, String name) {
         super(position,name);
@@ -47,9 +48,9 @@ public class MyRobot extends Agent{
         sonars = RobotFactory.addSonarBeltSensor(this, 12);
         bumpers = RobotFactory.addBumperBeltSensor(this, 8);
         line = RobotFactory.addLineSensor(this,15);
-//        leftLight = RobotFactory.addLightSensorLeft(this);
-//        rightLight = RobotFactory.addLightSensorRight(this);
-        light = RobotFactory.addLightSensor(this);
+        leftLight = RobotFactory.addLightSensorLeft(this);
+        rightLight = RobotFactory.addLightSensorRight(this);
+//        light = RobotFactory.addLightSensor(this);
 
         camera = RobotFactory.addCameraSensor(this);
         camera.rotateZ(-Math.PI/4);
@@ -60,11 +61,13 @@ public class MyRobot extends Agent{
     }
 
     public void performBehavior() {
-        if(reachedTarget()){
+        if(reachedTarget){
             setRotationalVelocity(0);
             setTranslationalVelocity(0);
             return;
         }
+
+        checkIfReachedTarget();
 
         int sonarSensorIndex = detectSonarSensorHitFromRange();
 
@@ -236,8 +239,11 @@ public class MyRobot extends Agent{
         return angle;
     }
 
-    private boolean reachedTarget() {
-//        return leftLight.getAverageLuminance() <= 0.9 || rightLight.getAverageLuminance() <= 0.9;
-        return false;
+    private void checkIfReachedTarget() {
+        float avg = (leftLight.getAverageLuminance() + rightLight.getAverageLuminance()) / 2;
+        double angle = wrapToPi(getAngle());
+        double currentTime = getLifeTime();
+
+        if(avg > 0.53 && (angle > 2.61 || angle < -2.61) && currentTime > 120) reachedTarget = true;
     }
 }
